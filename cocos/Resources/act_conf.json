@@ -1,0 +1,36 @@
+{
+    "width" : 1027,
+    "height" : 768,
+    "design.width" : 1920,
+    "design.height" : 1080,
+    "full_screen" : false,
+    "sprites":[
+        {
+            "create_time" : 0,
+            "res" : "image/CloseNormal.png",
+            "anchor_point.x" : 0.5,
+            "anchor_point.y" : 0.5,
+            "x": 100,
+            "y": 100,
+			"width" : -1,
+            "height" : -1,
+            "angle" : 0,
+            "scale" : 1,
+            "opacity" : 255,
+            "act":[
+                {
+                    "type" : "move",
+                    "x" : 250,
+                    "y" : 100,
+                    "duration" : 2
+                },
+				{
+                    "type" : "scale",
+                    "width" : 200,
+                    "height" : 200,
+                    "duration" : 2
+                }
+            ]
+        }
+    ]
+}
