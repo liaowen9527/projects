@@ -91,7 +91,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     director->setOpenGLView(glview);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
+	glview->setDesignResolutionSize(conf->m_designWidth, conf->m_designHeight, ResolutionPolicy::NO_BORDER);
+    //glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 
     Size frameSize = glview->getFrameSize();
     
@@ -102,27 +103,30 @@ bool AppDelegate::applicationDidFinishLaunching()
     // We use the ratio of resource's height to the height of design resolution,
     // This can make sure that the resource's height could fit for the height of design resolution.
 
-    // If the frame's height is larger than the height of medium resource size, select large resource.
-    if (frameSize.height > mediumResource.size.height)
-    {
-        searchPath.push_back(largeResource.directory);
+	if (0)
+	{
+		// If the frame's height is larger than the height of medium resource size, select large resource.
+		if (frameSize.height > mediumResource.size.height)
+		{
+			searchPath.push_back(largeResource.directory);
 
-        director->setContentScaleFactor(MIN(largeResource.size.height/designResolutionSize.height, largeResource.size.width/designResolutionSize.width));
-    }
-    // If the frame's height is larger than the height of small resource size, select medium resource.
-    else if (frameSize.height > smallResource.size.height)
-    {
-        searchPath.push_back(mediumResource.directory);
-        
-        director->setContentScaleFactor(MIN(mediumResource.size.height/designResolutionSize.height, mediumResource.size.width/designResolutionSize.width));
-    }
-    // If the frame's height is smaller than the height of medium resource size, select small resource.
-    else
-    {
-        searchPath.push_back(smallResource.directory);
+			director->setContentScaleFactor(MIN(largeResource.size.height / designResolutionSize.height, largeResource.size.width / designResolutionSize.width));
+		}
+		// If the frame's height is larger than the height of small resource size, select medium resource.
+		else if (frameSize.height > smallResource.size.height)
+		{
+			searchPath.push_back(mediumResource.directory);
 
-        director->setContentScaleFactor(MIN(smallResource.size.height/designResolutionSize.height, smallResource.size.width/designResolutionSize.width));
-    }
+			director->setContentScaleFactor(MIN(mediumResource.size.height / designResolutionSize.height, mediumResource.size.width / designResolutionSize.width));
+		}
+		// If the frame's height is smaller than the height of medium resource size, select small resource.
+		else
+		{
+			searchPath.push_back(smallResource.directory);
+
+			director->setContentScaleFactor(MIN(smallResource.size.height / designResolutionSize.height, smallResource.size.width / designResolutionSize.width));
+		}
+	}
     
     // Set searching path
     FileUtils::getInstance()->setSearchPaths(searchPath);

@@ -14,16 +14,32 @@ PhotoLayer::~PhotoLayer()
 
 }
 
-bool PhotoLayer::init()
+PhotoLayer* PhotoLayer::create(act_conf::LayerPtr conf)
 {
+	PhotoLayer* pRet = new PhotoLayer();
+	if (pRet && pRet->init(conf))
+	{
+		pRet->autorelease();
+		return pRet;
+	}
+	else
+	{
+		delete pRet;
+		pRet = nullptr;
+		return nullptr;
+	}
+}
+
+bool PhotoLayer::init(act_conf::LayerPtr conf)
+{
+	m_conf = conf;
 	if (!__super::init())
 	{
 		return false;
 	}
 
-	//schedule(schedule_selector(PhotoLayer::update));
-
-	m_mapSprite = config::Instance()->m_mapSprite;
+	m_mapSprite = conf->m_mapSprite;
+	schedule(schedule_selector(PhotoLayer::update));
 
 	ShowPhotos();
 
@@ -36,7 +52,14 @@ void PhotoLayer::update(float delta)
 
 	m_timeline += (int)(delta * 1000);
 
-	//ShowPhotos();
+	if (m_mapSprite.empty() && getChildrenCount() == 0)
+	{
+		removeFromParent();
+	}
+	else
+	{
+		ShowPhotos();
+	}
 }
 
 void PhotoLayer::ShowPhotos()

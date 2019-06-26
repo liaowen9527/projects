@@ -1,36 +1,71 @@
 {
-    "width" : 1027,
-    "height" : 768,
+    "width" : 1280,
+    "height" : 720,
     "design.width" : 1920,
     "design.height" : 1080,
     "full_screen" : false,
-    "sprites":[
-        {
-            "create_time" : 0,
-            "res" : "image/CloseNormal.png",
-            "anchor_point.x" : 0.5,
-            "anchor_point.y" : 0.5,
-            "x": 100,
-            "y": 100,
-			"width" : -1,
-            "height" : -1,
-            "angle" : 0,
-            "scale" : 1,
-            "opacity" : 255,
-            "act":[
-                {
-                    "type" : "move",
-                    "x" : 250,
-                    "y" : 100,
-                    "duration" : 2
-                },
-				{
-                    "type" : "scale",
-                    "width" : 200,
-                    "height" : 200,
-                    "duration" : 2
-                }
-            ]
-        }
-    ]
+	"blurs" : [
+		{
+			"shader" : "shaders/example_Blur.fsh",
+			"radius" : 65.0,	
+			"num" : 10
+		}
+	],
+	"layers" : [
+		{
+			"create_time" : 0,
+			"sprites":[
+			{
+				"create_time" : 0,
+				"res" : "image/hand-painted/02.jpg",
+				"blur" : 0,
+				"fitsize" : true,
+				"fitsize.scale" : 1.6
+			},
+			{
+				"create_time" : 0,
+				"res" : "image/hand-painted/02.jpg",
+				"x": 768,
+				"y": 864,
+				"anchor_point.x" : 0.8,
+				"anchor_point.y" : 0.8,
+				"fitsize" : true,
+				"fitsize.scale" : 1.2,
+				"act": {
+					"type" : "sequence",
+					"acts" : [
+						{
+							"type" : "scale",
+							"duration" : 2,
+							"fitsize" : true,
+							"fitsize.scale" : 1.0
+						}
+					]
+				}
+			},
+			{
+				"create_time" : 0,
+				"res" : "image/hand-painted/03.jpg",
+				"x": 1152,
+				"y": 864,
+				"anchor_point.x" : 0.2,
+				"anchor_point.y" : 0.8,
+				"fitsize" : true,
+				"fitsize.scale" : 1.2,
+				"act": {
+					"type" : "sequence",
+					"acts" : [
+						{
+							"type" : "scale",
+							"duration" : 2,
+							"fitsize" : true,
+							"fitsize.scale" : 1.0
+						}
+					]
+				}
+			}
+		]
+		}
+	]
+    
 }
