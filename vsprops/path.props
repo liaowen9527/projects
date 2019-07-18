@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+	<!-->public folder define<-->
+	<RootFolder>$(MSBuildThisFileDirectory)..\</RootFolder>
+	<ProjFolder>$(RootFolder)projects\</ProjFolder>
+	<LwUtilRootFolder>$(RootFolder)..\multi_tech\cpp\</LwUtilRootFolder>
+	<LwUtilFolder>$(LwUtilRootFolder)src\</LwUtilFolder>
+	<third>$(RootFolder)..\3rd\</third>
+	<third_include>$(third)src\</third_include>
+	<third_lib>$(third)lib\</third_lib>
+	<LwInclude>$(LwUtilRootFolder)include\;$(third_include)</LwInclude>
+	<LwLibs>$(LwUtilRootFolder)libs\</LwLibs>
+	<LwOutputDir>$(SolutionDir)output\$(Platform)\$(Configuration)\</LwOutputDir>
+	
+	<!-->redefine the vs default value<-->
+	<OutDir>$(LwOutputDir)bin\</OutDir>
+    <IntDir>$(LwOutputDir)temp\$(ProjectName)</IntDir>
+	
+	<!-->output libs<-->
+	<LwLibDir>$(LwOutputDir)lib\</LwLibDir>
+	
+	<!-->depends libs<-->
+    <mfc_dialog_include>$(LwUtilFolder)lw_ui_lib;$(LwUtilFolder)lw_util;$(LwUtilFolder)lw_client;$(LwUtilFolder)lw_putty;;$(LwUtilFolder)lw_live;</mfc_dialog_include>
+    <mfc_dialog_lib>lw_ui_lib.lib;lw_client.lib;lw_util.lib;lw_putty.lib;lw_live.lib;</mfc_dialog_lib>
+		
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+		<AdditionalIncludeDirectories>$(LwInclude);$(ProjFolder);$(MSBuildProjectDirectory)</AdditionalIncludeDirectories>
+		<DisableSpecificWarnings>4251;4275;4996;4273;4800;4309;4101;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+		<AdditionalLibraryDirectories>$(LwLibs);$(LwLibDir);$(third_lib)</AdditionalLibraryDirectories>
+		<ImportLibrary>$(LwLibDir)/$(TargetName).lib</ImportLibrary>
+		<IgnoreSpecificDefaultLibraries>atlsd</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
