@@ -7,6 +7,7 @@
 #include "mfc_dialogDlg.h"
 #include "afxdialogex.h"
 #include "ssh_client_param.h"
+#include "telnet_client_param.h"
 #include "client_factory.h"
 #include "terminal_display.h"
 
@@ -176,18 +177,35 @@ void CmfcdialogDlg::OnCancel()
 
 void CmfcdialogDlg::TestCli()
 {
-	SshClientParamPtr clientParam = std::make_shared<SshClientParam>("10.10.3.253");
-	clientParam->SetPort(22);
-	clientParam->SetUsername("");
-	clientParam->SetPassword("");
-	clientParam->SetSshVersion(ssh2);
+	//Linux--as jump box
+	SshClientParamPtr clientParam = std::make_shared<SshClientParam>("10.10.5.141");
+	clientParam->SetSshVersion(ssh1);
 
-	LiveParamPtr liveParam = std::make_shared<LiveParam>();
-	liveParam->SetClientParam(clientParam);
+	SshClientParamPtr clientParam2 = std::make_shared<SshClientParam>("10.10.5.141");
+	clientParam2->SetSshVersion(ssh2);
+
+	SshClientParamPtr clientParam3 = std::make_shared<SshClientParam>("10.10.3.253");
+	clientParam3->SetSshVersion(ssh1);
+
+	SshClientParamPtr clientParam4 = std::make_shared<SshClientParam>("10.10.3.253");
+	clientParam4->SetSshVersion(ssh2);
+
+	//TelnetClientParamPtr clientParam = std::make_shared<TelnetClientParam>("172.24.101.34");
 
 	DestinationPtr destPtr = std::make_shared<Destination>();
 	lw_util::Tree<LiveParamPtr>& clients = destPtr->m_clients;
-	clients.InsertItem(liveParam);
+
+	LiveParamPtr linuxSsh1 = std::make_shared<LiveParam>(clientParam);
+	LiveParamPtr linuxSsh2 = std::make_shared<LiveParam>(clientParam2);
+	clients.InsertItem(linuxSsh1);
+	clients.InsertItem(linuxSsh2);
+
+	LiveParamPtr devSsh1 = std::make_shared<LiveParam>(clientParam3);
+	LiveParamPtr devSsh2 = std::make_shared<LiveParam>(clientParam4);
+	clients.InsertItem(devSsh1, linuxSsh1);
+	clients.InsertItem(devSsh2, linuxSsh2);
+	clients.InsertItem(devSsh1, linuxSsh1);
+	clients.InsertItem(devSsh2, linuxSsh2);
 
 	m_interaction = std::make_shared<Interaction>();
 	m_interaction->SetDestination(destPtr);

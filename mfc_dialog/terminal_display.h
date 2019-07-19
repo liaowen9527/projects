@@ -1,12 +1,12 @@
 #pragma once
-#include "display_buffer.h"
+#include "display_buffer_limit.h"
 #include "terminal/Terminal.h"
 
 namespace lw_live {
 	class Interaction;
 }
 
-class TerminalDisplay : public lw_live::DisplayBuffer, public lw_ui::TerminalDelegate
+class TerminalDisplay : public lw_live::DisplayBufferLimit, public lw_ui::TerminalDelegate
 {
 public:
 	TerminalDisplay();
