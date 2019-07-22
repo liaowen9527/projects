@@ -33,6 +33,18 @@
     <ClInclude Include="terminal_display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DlgSession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="STSession.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="STSessionMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfc_dialog.cpp">
@@ -45,6 +57,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="terminal_display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="STSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="STSessionMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,6 +84,15 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\mfc_dialog.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\toolbar1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\toolbar_main.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

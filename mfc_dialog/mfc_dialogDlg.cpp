@@ -6,10 +6,9 @@
 #include "mfc_dialog.h"
 #include "mfc_dialogDlg.h"
 #include "afxdialogex.h"
-#include "ssh_client_param.h"
-#include "telnet_client_param.h"
-#include "client_factory.h"
 #include "terminal_display.h"
+#include "DlgSession.h"
+#include "AppInstance.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,6 +71,15 @@ BEGIN_MESSAGE_MAP(CmfcdialogDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_SIZE()
+	ON_WM_CLOSE()
+
+	ON_COMMAND(ID_LOGIN, OnLogin)
+	ON_COMMAND(ID_LOGOUT, OnLogout)
+	ON_COMMAND(ID_AUTO_LOG, OnExecutionLog)
+	ON_COMMAND(ID_NEW_SESSION, OnNewSession)
+	ON_COMMAND(ID_RECONCT, OnReconnect)
+	ON_COMMAND(ID_DISCONNCT, OnDisconnect)
 END_MESSAGE_MAP()
 
 
@@ -107,13 +115,7 @@ BOOL CmfcdialogDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	m_display = std::make_shared<TerminalDisplay>();
-	m_display->BindTerminal(&m_terminal);
-
-	m_terminal.SetDelegate(m_display.get());
-
-	ClientFactory::InitEnv();
-	TestCli();
+	InitCtrls();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -167,7 +169,23 @@ HCURSOR CmfcdialogDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void CmfcdialogDlg::OnCancel()
+void CmfcdialogDlg::OnSize(UINT nType, int cx, int cy)
+{
+	__super::OnSize(nType, cx, cy);
+
+	CRect rcClient;
+	GetClientRect(&rcClient);
+	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, 0, 0, &rcClient);
+	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &rcClient, &rcClient);
+	
+	if (m_terminal.GetSafeHwnd())
+	{
+		m_terminal.MoveWindow(rcClient);
+	}
+	
+}
+
+void CmfcdialogDlg::OnClose()
 {
 	m_display->BindTerminal(NULL);
 	m_display->BindInteraction(nullptr);
@@ -175,37 +193,38 @@ void CmfcdialogDlg::OnCancel()
 	__super::OnCancel();
 }
 
-void CmfcdialogDlg::TestCli()
+void CmfcdialogDlg::OnLogin()
 {
-	//Linux--as jump box
-	SshClientParamPtr clientParam = std::make_shared<SshClientParam>("10.10.5.141");
-	clientParam->SetSshVersion(ssh1);
 
-	SshClientParamPtr clientParam2 = std::make_shared<SshClientParam>("10.10.5.141");
-	clientParam2->SetSshVersion(ssh2);
+}
 
-	SshClientParamPtr clientParam3 = std::make_shared<SshClientParam>("10.10.3.253");
-	clientParam3->SetSshVersion(ssh1);
+void CmfcdialogDlg::OnLogout()
+{
 
-	SshClientParamPtr clientParam4 = std::make_shared<SshClientParam>("10.10.3.253");
-	clientParam4->SetSshVersion(ssh2);
+}
 
-	//TelnetClientParamPtr clientParam = std::make_shared<TelnetClientParam>("172.24.101.34");
+void CmfcdialogDlg::OnExecutionLog()
+{
 
-	DestinationPtr destPtr = std::make_shared<Destination>();
-	lw_util::Tree<LiveParamPtr>& clients = destPtr->m_clients;
+}
 
-	LiveParamPtr linuxSsh1 = std::make_shared<LiveParam>(clientParam);
-	LiveParamPtr linuxSsh2 = std::make_shared<LiveParam>(clientParam2);
-	clients.InsertItem(linuxSsh1);
-	clients.InsertItem(linuxSsh2);
+void CmfcdialogDlg::OnNewSession()
+{
+	STSession session;
+	session.GenerateId();
+	session.SetHost("10.10.5.141");
+	session.SetProtocol(STSession::emSsh);
 
-	LiveParamPtr devSsh1 = std::make_shared<LiveParam>(clientParam3);
-	LiveParamPtr devSsh2 = std::make_shared<LiveParam>(clientParam4);
-	clients.InsertItem(devSsh1, linuxSsh1);
-	clients.InsertItem(devSsh2, linuxSsh2);
-	clients.InsertItem(devSsh1, linuxSsh1);
-	clients.InsertItem(devSsh2, linuxSsh2);
+	DlgSession dlg;
+	dlg.InitSession(session, FALSE);
+	if (IDCANCEL == dlg.DoModal())
+	{
+		return;
+	}
+
+	dlg.GetSession(session);
+
+	DestinationPtr destPtr = AppInstance::Instance()->GetDestination(&session);
 
 	m_interaction = std::make_shared<Interaction>();
 	m_interaction->SetDestination(destPtr);
@@ -215,4 +234,34 @@ void CmfcdialogDlg::TestCli()
 
 	m_interaction->Connect();
 }
+
+void CmfcdialogDlg::OnReconnect()
+{
+	std::string str = "\r\n";
+	m_interaction->WriteData(str.c_str(), str.length());
+	m_interaction->Connect();
+}
+
+void CmfcdialogDlg::OnDisconnect()
+{
+	m_interaction->DisConnect();
+}
+
+void CmfcdialogDlg::InitCtrls()
+{
+	VERIFY(m_toolbar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP /*| CBRS_GRIPPER*/ | CBRS_TOOLTIPS, CRect(4, 4, 0, 0)));
+	VERIFY(m_toolbar.LoadToolBar(IDR_TOOLBAR_MAIN));
+
+	m_toolbar.ShowWindow(SW_SHOW);
+	//RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0);
+
+	m_display = std::make_shared<TerminalDisplay>();
+	m_display->BindTerminal(&m_terminal);
+
+	m_terminal.SetDelegate(m_display.get());
+
+	m_menu.LoadMenu(IDR_MENU_MAIN);
+	SetMenu(&m_menu);
+}
+
 

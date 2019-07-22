@@ -6,6 +6,7 @@
 #include "terminal/Terminal.h"
 #include "interaction.h"
 #include "terminal_display.h"
+#include "STSession.h"
 
 // CmfcdialogDlg dialog
 class CmfcdialogDlg : public CDialogEx
@@ -34,9 +35,22 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnClose();
+
+	afx_msg void OnLogin();
+	afx_msg void OnLogout();
+	afx_msg void OnExecutionLog();
+	afx_msg void OnNewSession();
+	afx_msg void OnReconnect();
+	afx_msg void OnDisconnect();
+
 protected:
-	virtual void OnCancel();
-	void TestCli();
+	void InitCtrls();
+
+protected:
+	CMenu m_menu;
+	CToolBar m_toolbar;
 
 protected:
 	lw_ui::CTerminal m_terminal;

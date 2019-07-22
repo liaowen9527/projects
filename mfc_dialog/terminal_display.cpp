@@ -125,8 +125,7 @@ bool TerminalDisplay::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	CString cstr;
 	cstr.Format(_T("%c"), nChar);
-	std::string str;
-	CStringConverter::to_str(cstr, str);
+	std::string str = CStringConverter::to_str(cstr);
 
 	m_interaction->SendData(str, false);
 
