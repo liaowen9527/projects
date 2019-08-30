@@ -6,16 +6,12 @@
 #include "mfc_dialog.h"
 #include "mfc_dialogDlg.h"
 #include "afxdialogex.h"
-#include "terminal_display.h"
 #include "DlgSession.h"
-#include "AppInstance.h"
+#include "DlgCliWindow.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-using namespace lw_client;
-using namespace lw_live;
 
 // CAboutDlg dialog used for App About
 
@@ -55,7 +51,7 @@ END_MESSAGE_MAP()
 
 
 CmfcdialogDlg::CmfcdialogDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_MFC_DIALOG_DIALOG, pParent)
+	: CDialogEx(CmfcdialogDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -64,7 +60,7 @@ void CmfcdialogDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
-	DDX_Control(pDX, IDC_STATIC_TERMINAL, m_terminal);
+	DDX_Control(pDX, IDC_TAB_CLI, m_tab);
 }
 
 BEGIN_MESSAGE_MAP(CmfcdialogDlg, CDialogEx)
@@ -178,19 +174,11 @@ void CmfcdialogDlg::OnSize(UINT nType, int cx, int cy)
 	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, 0, 0, &rcClient);
 	RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery, &rcClient, &rcClient);
 	
-	if (m_terminal.GetSafeHwnd())
+	if (m_tab.GetSafeHwnd())
 	{
-		m_terminal.MoveWindow(rcClient);
+		m_tab.MoveWindow(rcClient);
 	}
 	
-}
-
-void CmfcdialogDlg::OnClose()
-{
-	m_display->BindTerminal(NULL);
-	m_display->BindInteraction(nullptr);
-
-	__super::OnCancel();
 }
 
 void CmfcdialogDlg::OnLogin()
@@ -224,27 +212,19 @@ void CmfcdialogDlg::OnNewSession()
 
 	dlg.GetSession(session);
 
-	DestinationPtr destPtr = AppInstance::Instance()->GetDestination(&session);
-
-	m_interaction = std::make_shared<Interaction>();
-	m_interaction->SetDestination(destPtr);
-	m_interaction->SetDisplay(m_display);
-
-	m_display->BindInteraction(m_interaction.get());
-
-	m_interaction->Connect();
+	OpenSession(session);
 }
 
 void CmfcdialogDlg::OnReconnect()
 {
-	std::string str = "\r\n";
+	/*std::string str = "\r\n";
 	m_interaction->WriteData(str.c_str(), str.length());
-	m_interaction->Connect();
+	m_interaction->Connect();*/
 }
 
 void CmfcdialogDlg::OnDisconnect()
 {
-	m_interaction->DisConnect();
+	//m_interaction->DisConnect();
 }
 
 void CmfcdialogDlg::InitCtrls()
@@ -255,13 +235,26 @@ void CmfcdialogDlg::InitCtrls()
 	m_toolbar.ShowWindow(SW_SHOW);
 	//RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0);
 
-	m_display = std::make_shared<TerminalDisplay>();
-	m_display->BindTerminal(&m_terminal);
-
-	m_terminal.SetDelegate(m_display.get());
-
 	m_menu.LoadMenu(IDR_MENU_MAIN);
 	SetMenu(&m_menu);
+
+	TCITEM tcItem;
+	tcItem.mask = TCIF_TEXT;
+	tcItem.pszText = _T("Tab #1");
+
+	//m_tab.InsertItem(0, &tcItem);
+	int nItem = m_tab.InsertItem(0, _T("aaa"), 0);
 }
 
+void CmfcdialogDlg::OpenSession(const STSession& session)
+{
+	int nItem = m_tab.InsertItem(0, _T("aaa"), 0);
+
+	/*CDlgCliWindow* pCliWindow = new CDlgCliWindow(&m_tab);
+	pCliWindow->Create(CDlgCliWindow::IDD, &m_tab);*/
+	
+	//pCliWindow->MoveWindow();
+
+	//m_tab.SetItemData(nItem, pCliWindow);
+}
 

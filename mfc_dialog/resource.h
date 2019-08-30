@@ -16,8 +16,9 @@
 #define IDR_MAINFRAME                   128
 #define IDR_TOOLBAR_MAIN                131
 #define IDR_MENU_MAIN                   133
-#define IDD_MFC_DIALOG_DIALOG           134
+#define IDD_DLG_MAIN                    134
 #define IDD_DLG_SESSION                 135
+#define IDD_DLG_CHILD                   137
 #define IDC_STATIC_TERMINAL             1000
 #define IDC_EDIT_NAME                   1003
 #define IDC_EDIT_PORT                   1004
@@ -27,15 +28,16 @@
 #define IDC_COMBO_PROTOCOL              1008
 #define IDC_CHECK_SAVE                  1009
 #define IDC_BTN_CONNECT                 1010
+#define IDC_TAB_CLI                     1011
 #define ID_ABOUT                        57671
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

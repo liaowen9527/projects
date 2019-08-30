@@ -45,6 +45,9 @@
     <ClInclude Include="AppInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DlgCliWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfc_dialog.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AppInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgCliWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

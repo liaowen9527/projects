@@ -3,9 +3,7 @@
 //
 
 #pragma once
-#include "terminal/Terminal.h"
-#include "interaction.h"
-#include "terminal_display.h"
+#include "controls/DragTabCtrl.h"
 #include "STSession.h"
 
 // CmfcdialogDlg dialog
@@ -16,9 +14,7 @@ public:
 	CmfcdialogDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_MFC_DIALOG_DIALOG };
-#endif
+	enum { IDD = IDD_DLG_MAIN };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -36,7 +32,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnClose();
 
 	afx_msg void OnLogin();
 	afx_msg void OnLogout();
@@ -48,12 +43,10 @@ protected:
 protected:
 	void InitCtrls();
 
-protected:
-	CMenu m_menu;
-	CToolBar m_toolbar;
+	void OpenSession(const STSession& session);
 
 protected:
-	lw_ui::CTerminal m_terminal;
-	lw_live::InteractionPtr m_interaction;
-	TerminalDisplayPtr m_display;
+	CDragTabCtrl m_tab;
+	CMenu m_menu;
+	CToolBar m_toolbar;
 };

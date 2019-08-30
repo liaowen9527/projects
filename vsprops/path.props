@@ -9,7 +9,7 @@
 	<LwUtilRootFolder>$(RootFolder)..\multi_tech\cpp\</LwUtilRootFolder>
 	<LwUtilFolder>$(LwUtilRootFolder)src\</LwUtilFolder>
 	<third>$(RootFolder)..\3rd\</third>
-	<third_include>$(third)src\</third_include>
+	<third_include>$(third)include\</third_include>
 	<third_lib>$(third)lib\</third_lib>
 	<LwInclude>$(LwUtilRootFolder)include\;$(third_include)</LwInclude>
 	<LwLibs>$(LwUtilRootFolder)libs\</LwLibs>
