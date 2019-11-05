@@ -238,23 +238,29 @@ void CmfcdialogDlg::InitCtrls()
 	m_menu.LoadMenu(IDR_MENU_MAIN);
 	SetMenu(&m_menu);
 
-	TCITEM tcItem;
-	tcItem.mask = TCIF_TEXT;
-	tcItem.pszText = _T("Tab #1");
-
-	//m_tab.InsertItem(0, &tcItem);
-	int nItem = m_tab.InsertItem(0, _T("aaa"), 0);
+	//m_tab.ShowWindow(SW_SHOW);
 }
 
 void CmfcdialogDlg::OpenSession(const STSession& session)
 {
-	int nItem = m_tab.InsertItem(0, _T("aaa"), 0);
+	TCITEM tcItem;
+	tcItem.mask = TCIF_TEXT;
+	tcItem.pszText = _T("Tab #1");
 
-	/*CDlgCliWindow* pCliWindow = new CDlgCliWindow(&m_tab);
-	pCliWindow->Create(CDlgCliWindow::IDD, &m_tab);*/
+	int nItem = m_tab.InsertItem(0, &tcItem);
+	//int nItem = m_tab.InsertItem(0, _T("aaa"), 0);
+
+	CDlgCliWindow* pCliWindow = new CDlgCliWindow(&m_tab);
+	pCliWindow->InitSession(session);
+
+	pCliWindow->Create(CDlgCliWindow::IDD, &m_tab);
 	
-	//pCliWindow->MoveWindow();
+	CRect rc;
+	m_tab.GetClientRect(rc);
+	//m_tab.ClientToScreen(rc);
+	rc.DeflateRect(0, 20, 0, 0);
+	pCliWindow->MoveWindow(rc);
+	pCliWindow->ShowWindow(SW_SHOW);
 
 	//m_tab.SetItemData(nItem, pCliWindow);
 }
-

@@ -49,4 +49,8 @@ protected:
 	CDragTabCtrl m_tab;
 	CMenu m_menu;
 	CToolBar m_toolbar;
+
+	/*lw_ui::CTerminal m_terminal;
+	lw_live::InteractionPtr m_interaction;
+	TerminalDisplayPtr m_display;*/
 };
