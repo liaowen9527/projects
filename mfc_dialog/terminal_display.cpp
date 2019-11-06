@@ -16,38 +16,21 @@ TerminalDisplay::~TerminalDisplay()
 
 void TerminalDisplay::BindTerminal(lw_ui::CTerminal* terminal)
 {
-	std::lock_guard<std::mutex> lck(m_mutex);
+	//std::lock_guard<std::mutex> lck(m_mutex);
 	m_terminal = terminal;
 }
 
 void TerminalDisplay::BindInteraction(lw_live::Interaction* interaction)
 {
 	m_interaction = interaction;
-}
-
-void TerminalDisplay::SetModify_unsafe(int nRow, bool bValue)
-{
-	if (m_terminal)
-	{
-		m_terminal->Invalidate();
-	}
-}
-
-void TerminalDisplay::SyncSeekP(size_t nRow, size_t nCol)
-{
-	__super::SyncSeekP(nRow, nCol);
-
-	if (m_terminal)
-	{
-		m_terminal->SetCurPos(m_nIndexRow, m_nIndexCol);
-		m_terminal->Invalidate();
-	}
+	m_interaction->GetTerminal()->set_callback([this]() {
+		this->m_terminal->SyncFromDelegate();
+	});
 }
 
 CString TerminalDisplay::GetLineText(int nLine)
 {
-	std::wstring wstr;
-	ReadLine(nLine, wstr, false);
+	std::wstring wstr = m_interaction->GetTerminal()->get_text(ToRow_term(nLine));
 
 	return CStringConverter::to_cstr(wstr);
 }
@@ -96,19 +79,45 @@ void TerminalDisplay::GetLine(int nLine, std::vector<lw_ui::TextBlock>& vecBlock
 
 int TerminalDisplay::GetTotalLines()
 {
-	size_t row = 0;
-	size_t col = 0;
-	GetEndPos(row, col);
-
-	return row + 1;
+	return m_interaction->GetTerminal()->get_lines();
 }
 
 CString TerminalDisplay::GetWindowText(const CPoint& ptStart, const CPoint& ptEnd)
 {
 	std::wstring strContent;
-	Read(ptStart.y, ptStart.x, ptEnd.y, ptEnd.x, strContent);
+	//Read(ptStart.y, ptStart.x, ptEnd.y, ptEnd.x, strContent);
 
 	return CStringConverter::to_cstr(strContent);
+}
+
+void TerminalDisplay::GetCursorPos(int& row, int& col)
+{
+	m_interaction->GetTerminal()->get_cursor(row, col);
+	row = ToRow_ui(row);
+}
+
+int TerminalDisplay::GetVScrollBottom()
+{
+	int top = m_interaction->GetTerminal()->get_vscrollbar();
+	int rows = 0;
+	int cols = 0;
+	m_interaction->GetTerminal()->get_size(rows, cols);
+
+	int bottom = top + rows;
+	return ToRow_ui(bottom);
+}
+
+void TerminalDisplay::SetVScrollBottom(int bottom)
+{
+	bottom = ToRow_term(bottom);
+	vt_terminal* vtterm = m_interaction->GetTerminal();
+
+	int rows = 0;
+	int cols = 0;
+	vtterm->get_size(rows, cols);
+
+	int top = bottom - rows;
+	vtterm->set_vscrollbar(top);
 }
 
 bool TerminalDisplay::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -202,6 +211,20 @@ bool TerminalDisplay::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	return DoKeyDown(func);
+}
+
+int TerminalDisplay::ToRow_ui(int row)
+{
+	vt_terminal* vtterm = m_interaction->GetTerminal();
+	int sblines = vtterm->get_sblines();
+	return row + sblines;
+}
+
+int TerminalDisplay::ToRow_term(int row)
+{
+	vt_terminal* vtterm = m_interaction->GetTerminal();
+	int sblines = vtterm->get_sblines();
+	return row - sblines;
 }
 
 bool TerminalDisplay::DoKeyEnter()

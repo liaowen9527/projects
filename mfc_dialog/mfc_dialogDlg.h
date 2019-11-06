@@ -19,7 +19,6 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-
 // Implementation
 protected:
 	HICON m_hIcon;
@@ -32,6 +31,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnClose();
 
 	afx_msg void OnLogin();
 	afx_msg void OnLogout();

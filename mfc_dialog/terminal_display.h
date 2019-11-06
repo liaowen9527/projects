@@ -1,12 +1,11 @@
 #pragma once
-#include "display_buffer_limit.h"
 #include "terminal/Terminal.h"
 
 namespace lw_live {
 	class Interaction;
 }
 
-class TerminalDisplay : public lw_live::DisplayBufferLimit, public lw_ui::TerminalDelegate
+class TerminalDisplay : public lw_ui::TerminalDelegate
 {
 public:
 	TerminalDisplay();
@@ -16,18 +15,20 @@ public:
 	void BindInteraction(lw_live::Interaction* interaction);
 
 protected:
-	virtual void SetModify_unsafe(int nRow, bool bValue = true);
-	virtual void SyncSeekP(size_t nRow, size_t nCol);
-
-protected:
 	virtual CString GetLineText(int nLine);
 	virtual void GetLine(int nLine, std::vector<lw_ui::TextBlock>& vecBlock);
 	virtual int GetTotalLines();
 
 	virtual CString GetWindowText(const CPoint& ptStart, const CPoint& ptEnd);
+	virtual void GetCursorPos(int& row, int& col);
+	virtual int GetVScrollBottom();
+	virtual void SetVScrollBottom(int bottom);
 
 	virtual bool OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
 	virtual bool OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+	int ToRow_ui(int row);
+	int ToRow_term(int row);
 
 protected:
 	bool DoKeyEnter();

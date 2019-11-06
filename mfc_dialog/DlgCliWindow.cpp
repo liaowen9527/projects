@@ -38,7 +38,7 @@ BOOL CDlgCliWindow::OnInitDialog()
 
 	m_interaction = std::make_shared<Interaction>();
 	m_interaction->SetDestination(destPtr);
-	m_interaction->SetDisplay(m_display);
+	//m_interaction->SetDisplay(m_display);
 
 	m_display->BindInteraction(m_interaction.get());
 

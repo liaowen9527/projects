@@ -181,6 +181,11 @@ void CmfcdialogDlg::OnSize(UINT nType, int cx, int cy)
 	
 }
 
+void CmfcdialogDlg::OnClose()
+{
+	__super::OnCancel();
+}
+
 void CmfcdialogDlg::OnLogin()
 {
 
